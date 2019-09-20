@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   prjName = 'YetBase'
   s.name             = prjName
-  s.version          = '1.0.2'
+  s.version          = '1.0.3'
   s.summary          = "#{prjName} is an iOS  library writen by swift."
 
 # This description is used to generate tags and improve search results.
