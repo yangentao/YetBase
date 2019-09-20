@@ -65,7 +65,7 @@ public class Task {
 		DispatchQueue.global().async(execute: block)
 	}
 
-	public static func backDelay(seconds: Double, _ block: @escaping BlockVoid) {
+	public static func backDelay(_ seconds: Double, _ block: @escaping BlockVoid) {
 		let a = DispatchTime.now() + seconds
 		DispatchQueue.global().asyncAfter(deadline: a, execute: block)
 	}
@@ -142,7 +142,7 @@ public class TaskQueue {
 		DispatchQueue.main.async(execute: block)
 	}
 
-	public func foreDelay(seconds: Double, _ block: @escaping BlockVoid) {
+	public func foreDelay(_ seconds: Double, _ block: @escaping BlockVoid) {
 		let a = DispatchTime.now() + seconds
 		DispatchQueue.main.asyncAfter(deadline: a, execute: block)
 	}
@@ -151,7 +151,7 @@ public class TaskQueue {
 		self.queue.sync(execute: block)
 	}
 
-	public func backDelay(seconds: Double, _ block: @escaping BlockVoid) {
+	public func backDelay(_ seconds: Double, _ block: @escaping BlockVoid) {
 		let a = DispatchTime.now() + seconds
 		self.queue.asyncAfter(deadline: a, execute: block)
 	}
