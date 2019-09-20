@@ -17,8 +17,8 @@ class Msg {
 	var argB1 = false
 	var argB2 = false
 
-	init(_ msg: IString) {
-		self.msg = msg.toString
+	init(_ msg: String) {
+		self.msg = msg
 	}
 
 	func n1(_ n: Int) -> Msg {
@@ -41,8 +41,12 @@ class Msg {
 		return self
 	}
 
-	static func ==(lhs: Msg, rhs: IString) -> Bool {
-		return lhs.msg == rhs.toString
+	func fire() {
+		fireFore(self)
+	}
+
+	static func ==(lhs: Msg, rhs: String) -> Bool {
+		return lhs.msg == rhs
 	}
 }
 
@@ -54,8 +58,8 @@ fileprivate class MsgItem: Equatable {
 	var key: String
 	weak var listener: MsgListener?
 
-	init(_ key: IString, _ L: MsgListener) {
-		self.key = key.toString
+	init(_ key: String, _ L: MsgListener) {
+		self.key = key
 		self.listener = L
 	}
 
@@ -120,10 +124,10 @@ class MsgCenterObject {
 		}
 	}
 
-	func listen(_ listener: MsgListener, _ msg: IString, _ msgs: IString...) {
-		listen(msg.toString, listener)
+	func listen(_ listener: MsgListener, _ msg: String, _ msgs: String...) {
+		listen(msg, listener)
 		for m in msgs {
-			listen(m.toString, listener)
+			listen(m, listener)
 		}
 	}
 
@@ -170,12 +174,12 @@ class MsgCenterObject {
 
 let MsgCenter = MsgCenterObject()
 
-func fireFore(_ msg: IString) {
-	fireFore(Msg(msg.toString))
+func fireFore(_ msg: String) {
+	fireFore(Msg(msg))
 }
 
-func fireFore(_ msg: IString, _ block: (Msg) -> Void) {
-	let m = Msg(msg.toString)
+func fireFore(_ msg: String, _ block: (Msg) -> Void) {
+	let m = Msg(msg)
 	block(m)
 	fireFore(m)
 }
