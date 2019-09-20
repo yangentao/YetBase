@@ -1,16 +1,16 @@
 PODS:
-  - YetBase (1.0.0)
+  - YetBase (1.0.5)
 
 DEPENDENCIES:
-  - YetBase
+  - YetBase (from `../`)
 
-SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
-    - YetBase
+EXTERNAL SOURCES:
+  YetBase:
+    :path: "../"
 
 SPEC CHECKSUMS:
-  YetBase: 6605d59c5e34da3ddbe8ae54e9de38baa831a080
+  YetBase: d0038f3838fda60b9eee04e722bc0d74798ad318
 
-PODFILE CHECKSUM: 2fba15a8460fdb8f76481b39a8118382dc09dedb
+PODFILE CHECKSUM: 0113a673a8d1c65a5498e3cc3b9c1a7cc921279b
 
 COCOAPODS: 1.7.5

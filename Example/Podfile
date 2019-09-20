@@ -1,7 +1,7 @@
 use_frameworks!
 target 'TestApp' do
-  # pod 'YetBase', :path => '../'
-  pod "YetBase"
+  pod 'YetBase', :path => '../'
+  # pod "YetBase"
   # pod 'Yson'
   
 end

@@ -88,10 +88,10 @@ public class Task {
 }
 
 public class Sync {
-	private weak var obj: Any? = nil
+	private weak var obj: AnyObject? = nil
 	private var state: Int = 0
 
-	public init(_ obj: Any) {
+	public init(_ obj: AnyObject) {
 		self.obj = obj
 		state = 0
 	}
