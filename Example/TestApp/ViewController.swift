@@ -7,7 +7,10 @@
 //
 
 import UIKit
+
 //import Yson
+
+import YetBase
 
 class Person: Codable {
 	var name: String = ""
@@ -18,6 +21,14 @@ class ViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		let s  = Hex.encode("Hello")
+		logd(s)
+		let f = CFile(filename: "Hello")
+		f.close()
+//		let f = CFile("")
+
+//		fileSizeOf("")
 
 //        if let a = YsonObject("""
 //                              {"name":"Yang","age":99}
