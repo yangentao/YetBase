@@ -1,8 +1,14 @@
 PODS:
   - YetBase (1.0.0)
+  - Yson (1.1.1)
 
 DEPENDENCIES:
   - YetBase (from `../`)
+  - Yson
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Yson
 
 EXTERNAL SOURCES:
   YetBase:
@@ -10,7 +16,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   YetBase: b7f52e1e30e1dea4d092a719bda4cd023db35e2e
+  Yson: 202d76dc91f2d42f84e707aef2f904006a0c737a
 
-PODFILE CHECKSUM: 12a2edc6346fffdbb5731487c16737bed7f7883e
+PODFILE CHECKSUM: 5abbf49a1ae51ae4c504409a047fe38288790d05
 
 COCOAPODS: 1.7.5

@@ -4,7 +4,6 @@
 //
 
 import Foundation
-import UIKit
 
 let ERR_MSG_TOAST = "msg.err.toast"
 

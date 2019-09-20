@@ -1,0 +1,6 @@
+framework module Yson {
+  umbrella header "Yson-umbrella.h"
+
+  export *
+  module * { export * }
+}

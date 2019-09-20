@@ -4,7 +4,6 @@
 //
 
 import Foundation
-import UIKit
 
 private var attr_key = "_attrkey_"
 

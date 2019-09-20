@@ -12,7 +12,7 @@ class ImageOption {
 }
 
 class _FileLocal {
-	private let map: FileMap<String, String> = FileMapOf("local_file_cache")
+	private let map: FileMap<String, String> = FileMap<String, String>(Files.docFile("local_file_cache"))
 
 	private let dirName = "file_cache"
 
@@ -61,7 +61,7 @@ class _FileLocal {
 	}
 
 	func dump() -> [String: String] {
-		return map.map
+		return map.model.map
 	}
 
 }

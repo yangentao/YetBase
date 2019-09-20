@@ -4,7 +4,6 @@
 //
 
 import Foundation
-import UIKit
 
 class Msg {
 	var msg: String = ""

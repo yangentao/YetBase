@@ -32,7 +32,6 @@ func tickR<R>(_ msg: String, _ block: () -> R) -> R {
 	return r
 }
 
-
 func findUrlParam(url: String, param: String) -> String? {
 	if !url.hasPrefix("http") || !url.contains(param) {
 		return nil
@@ -49,7 +48,7 @@ func findUrlParam(url: String, param: String) -> String? {
 extension Bundle {
 
 	func file(_ file: String) -> File {
-		let p = Bundle.main.bundlePath.appendPath(file)
+		let p = self.bundlePath.appendPath(file)
 		return File(p)
 	}
 }

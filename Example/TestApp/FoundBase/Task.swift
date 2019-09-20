@@ -5,22 +5,14 @@
 
 import Foundation
 
-typealias TaskBlock = () -> Void
-
-public extension Double {
-	var afterSeconds: DispatchTime {
-		return DispatchTime.now() + self
-	}
-}
-
 fileprivate var onceSet: Set<String> = Set<String>()
 
 class ScheduleItem {
 	var name: String
-	fileprivate var block: TaskBlock?
+	fileprivate var block: BlockVoid?
 	fileprivate var time: Double = Date().timeIntervalSince1970
 
-	init(name: String, block: @escaping TaskBlock) {
+	init(name: String, block: @escaping BlockVoid) {
 		self.name = name
 		self.block = block
 	}
@@ -38,11 +30,11 @@ class Task {
 
 	private static var tasks = [ScheduleItem]()
 
-	static func mergeFore(_ name: String, _ block: @escaping TaskBlock) {
+	static func mergeFore(_ name: String, _ block: @escaping BlockVoid) {
 		self.mergeFore(name, 0.3, block)
 	}
 
-	static func mergeFore(_ name: String, _ second: Double, _ block: @escaping TaskBlock) {
+	static func mergeFore(_ name: String, _ second: Double, _ block: @escaping BlockVoid) {
 
 		let item = ScheduleItem(name: name, block: block)
 		self.tasks.append(item)
@@ -65,7 +57,7 @@ class Task {
 		DispatchQueue.main.async(execute: block)
 	}
 
-	static func foreDelay(seconds: Double, _ block: @escaping BlockVoid) {
+	static func foreDelay(_ seconds: Double, _ block: @escaping BlockVoid) {
 		let a = DispatchTime.now() + seconds
 		DispatchQueue.main.asyncAfter(deadline: a, execute: block)
 	}
@@ -79,9 +71,8 @@ class Task {
 		DispatchQueue.global().asyncAfter(deadline: a, execute: block)
 	}
 
-	static func foreSchedule(_ second: Double, _ block: @escaping TaskBlock) -> ScheduleItem {
-		let item = ScheduleItem()
-		item.block = block
+	static func foreSchedule(_ second: Double, _ block: @escaping BlockVoid) -> ScheduleItem {
+		let item = ScheduleItem(name: "", block: block)
 		DispatchQueue.main.asyncAfter(deadline: second.afterSeconds) {
 			item.block?()
 			item.block = nil
