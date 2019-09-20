@@ -5,7 +5,6 @@
 
 import Foundation
 
-
 var isDebug: Bool {
 	get {
 		#if DEBUG

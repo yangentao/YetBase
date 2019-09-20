@@ -6,7 +6,7 @@
 import Foundation
 import UIKit
 
-typealias BlockVoid = () -> Void
+
 
 var debugModel = true
 
