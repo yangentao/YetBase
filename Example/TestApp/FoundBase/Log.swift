@@ -1,6 +1,6 @@
 //
-// Created by entaoyang@163.com on 2019-07-28.
-// Copyright (c) 2019 entao.dev. All rights reserved.
+// Created by entaoyang@163.com on 2017/10/10.
+// Copyright (c) 2017 yet.net. All rights reserved.
 //
 
 import Foundation
@@ -21,7 +21,7 @@ func println(_ items: Any...) {
 }
 
 func log(_ ss: Any?...) {
-//	#if DEBUG
+	#if DEBUG
 	LogLock.lock()
 	printA(Date.formatDateTimeMill)
 	printA(" INFO:")
@@ -41,7 +41,7 @@ func log(_ ss: Any?...) {
 	}
 	println()
 	LogLock.unlock()
-//	#endif
+	#endif
 }
 
 func logd(_ ss: Any?...) {
@@ -69,7 +69,6 @@ func logd(_ ss: Any?...) {
 }
 
 func loge(_ ss: Any?...) {
-//	#if DEBUG
 	LogLock.lock()
 	printA(Date.formatDateTimeMill)
 	printA(" ERROR:")
@@ -89,5 +88,4 @@ func loge(_ ss: Any?...) {
 	}
 	println()
 	LogLock.unlock()
-//	#endif
 }

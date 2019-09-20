@@ -46,3 +46,11 @@ func findUrlParam(url: String, param: String) -> String? {
 	}
 	return code.value
 }
+
+extension Bundle {
+
+	func file(_ file: String) -> File {
+		let p = Bundle.main.bundlePath.appendPath(file)
+		return File(p)
+	}
+}

@@ -1,6 +1,6 @@
 //
-// Created by entaoyang@163.com on 2019-07-27.
-// Copyright (c) 2019 entao.dev. All rights reserved.
+// Created by entaoyang@163.com on 2017/10/10.
+// Copyright (c) 2017 yet.net. All rights reserved.
 //
 
 import Foundation

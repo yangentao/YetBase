@@ -9,6 +9,17 @@ import UIKit
 class Hex {
 	private static var AR = "0123456789ABCDEF"
 
+	static func encodeChars(_ bytes: [Int8]) -> String {
+		var ret = ""
+		bytes.forEach { b in
+			let hi: Int = Int(0x0f & (b >> 4))
+			let lo: Int = Int(0x0f & b)
+			ret.append(AR.charAt(n: hi)!)
+			ret.append(AR.charAt(n: lo)!)
+		}
+		return ret
+	}
+
 	static func encodeBytes(_ bytes: [UInt8]) -> String {
 		var ret = ""
 		bytes.forEach { b in

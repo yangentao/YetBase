@@ -4,7 +4,6 @@
 //
 
 import Foundation
-import UIKit
 
 private var preTempFileName = ""
 
@@ -18,6 +17,10 @@ extension Date {
 	}
 	var formatedDateTimeMill: String {
 		return Date.format(self, "yyyy-MM-dd HH:mm:ss.SSS")
+	}
+
+	var formatedTime: String {
+		return Date.format(self, "HH:mm:ss")
 	}
 
 	static var tempFileName: String {
