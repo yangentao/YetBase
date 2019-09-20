@@ -88,7 +88,7 @@ public class Task {
 }
 
 public class Sync {
-	private let obj: Any
+	private weak var obj: Any? = nil
 	private var state: Int = 0
 
 	public init(_ obj: Any) {
@@ -98,14 +98,19 @@ public class Sync {
 
 	@discardableResult
 	public func enter() -> Sync {
-		objc_sync_enter(self.obj)
-		state = 1
+		if let ob = self.obj {
+			objc_sync_enter(ob)
+			state = 1
+		}
 		return self
 	}
 
 	public func exit() {
-		objc_sync_exit(self.obj)
-		state = 2
+		if let ob = self.obj {
+			objc_sync_exit(ob)
+			state = 2
+		}
+		
 	}
 
 	deinit {
