@@ -109,14 +109,14 @@ public class MsgCenterObject {
 	private var all = [MsgItem]()
 	private var allItems = [ListenerAllItem]()
 
-	public func remove(_ listener: MsgListener) {
+	func remove(_ listener: MsgListener) {
 		sync(self) {
 			all.removeAll(where: { $0.listener === listener })
 			allItems.removeAll(where: { $0.listener === listener })
 		}
 	}
 
-	public func listenAll(_ listener: MsgListener) {
+	func listenAll(_ listener: MsgListener) {
 		sync(self) {
 			let item = ListenerAllItem(listener)
 			if !allItems.contains(item) {
@@ -125,7 +125,7 @@ public class MsgCenterObject {
 		}
 	}
 
-	public func listen(_ listener: MsgListener, _ msg: String, _ msgs: String...) {
+	func listen(_ listener: MsgListener, _ msg: String, _ msgs: String...) {
 		listen(msg, listener)
 		for m in msgs {
 			listen(m, listener)
@@ -141,7 +141,7 @@ public class MsgCenterObject {
 		}
 	}
 
-	public func fireCurrent(_ msg: Msg) {
+	func fireCurrent(_ msg: Msg) {
 		_ = allItems.drop {
 			$0.listener == nil
 		}
@@ -166,7 +166,7 @@ public class MsgCenterObject {
 		}
 	}
 
-	public func fire(_ msg: Msg) {
+	func fire(_ msg: Msg) {
 		Task.fore {
 			MsgCenter.fireCurrent(msg)
 		}
