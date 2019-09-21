@@ -21,7 +21,6 @@ public func println(_ items: Any...) {
 }
 
 public func log(_ ss: Any?...) {
-	#if DEBUG
 	LogLock.lock()
 	printA(Date.formatDateTimeMill)
 	printA(" INFO:")
@@ -41,7 +40,6 @@ public func log(_ ss: Any?...) {
 	}
 	println()
 	LogLock.unlock()
-	#endif
 }
 
 public func logd(_ ss: Any?...) {
