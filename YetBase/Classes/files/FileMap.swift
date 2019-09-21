@@ -68,10 +68,12 @@ public class FileMap<K: Codable & Hashable, V: Codable>: Sequence {
 private var _FileMapStore = [String: WeakRef<AnyObject>]()
 
 private func _FileMapOf<K: Codable & Hashable, V: Codable>(_ file: File) -> FileMapModel<K, V> {
-	if let old = _FileMapStore[file.fullPath]?.value {
-		return old as! FileMapModel<K, V>
+	return syncR(_FileMapStore) {
+		if let old = _FileMapStore[file.fullPath]?.value {
+			return old as! FileMapModel<K, V>
+		}
+		let a = FileMapModel<K, V>(file)
+		_FileMapStore[file.fullPath] = WeakRef(a as AnyObject)
+		return a
 	}
-	let a = FileMapModel<K, V>(file)
-	_FileMapStore[file.fullPath] = WeakRef(a as AnyObject)
-	return a
 }

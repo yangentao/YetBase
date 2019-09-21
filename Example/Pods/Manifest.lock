@@ -1,5 +1,5 @@
 PODS:
-  - YetBase (1.0.5)
+  - YetBase (1.0.6)
 
 DEPENDENCIES:
   - YetBase (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  YetBase: d0038f3838fda60b9eee04e722bc0d74798ad318
+  YetBase: eb2f5fa006170aa66799f908030f604aa0248def
 
 PODFILE CHECKSUM: 0113a673a8d1c65a5498e3cc3b9c1a7cc921279b
 

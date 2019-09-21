@@ -59,10 +59,12 @@ public class FileArray<T: Codable & Hashable>: Sequence {
 private var _FileArrayStore = [String: WeakRef<AnyObject>]()
 
 private func fileArrayOf<T: Codable & Hashable>(_ f: File) -> FileArrayModel<T> {
-	if let old = _FileArrayStore[f.fullPath]?.value {
-		return old as! FileArrayModel<T>
+	return syncR(_FileArrayStore) {
+		if let old = _FileArrayStore[f.fullPath]?.value {
+			return old as! FileArrayModel<T>
+		}
+		let a = FileArrayModel<T>(f)
+		_FileArrayStore[f.fullPath] = WeakRef(a as AnyObject)
+		return a
 	}
-	let a = FileArrayModel<T>(f)
-	_FileArrayStore[f.fullPath] = WeakRef(a as AnyObject)
-	return a
 }

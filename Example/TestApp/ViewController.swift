@@ -21,28 +21,28 @@ class ViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		hello()
+	}
 
-		let s  = Hex.encode("Hello")
-		logd(s)
-		let f = CFile(filename: "Hello")
-		f.close()
-//		let f = CFile("")
+}
 
-//		fileSizeOf("")
+func hello() {
 
-//        if let a = YsonObject("""
-//                              {"name":"Yang","age":99}
-//                              """) {
-//            a.put("age", 100)
-//            let s = a.yson
-//            print(s)
-//            if let p: Person = Yson.fromYson(Person.self, a) {
-//                print(p.name)
-//                print(p.age)
-//                let ss = p.toYsonObject.yson
-//                print(ss)
-//            }
-//        }
+	let _ = A()
+	defer {
+		log("defer()")
+	}
+	log("hello...")
+}
+
+class A {
+	init() {
+		log("A.init")
+
+	}
+
+	deinit {
+		log("A.deinit")
 	}
 
 }

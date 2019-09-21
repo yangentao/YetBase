@@ -58,10 +58,12 @@ public class FileSet<T: Codable & Hashable>: Sequence {
 private var _FileSetStore = [String: WeakRef<AnyObject>]()
 
 private func fileSetOf<T: Codable & Hashable>(_ f: File) -> FileSetModel<T> {
-	if let old = _FileSetStore[f.fullPath]?.value {
-		return old as! FileSetModel<T>
+	return syncR(_FileSetStore) {
+		if let old = _FileSetStore[f.fullPath]?.value {
+			return old as! FileSetModel<T>
+		}
+		let a = FileSetModel<T>(f)
+		_FileSetStore[f.fullPath] = WeakRef(a as AnyObject)
+		return a
 	}
-	let a = FileSetModel<T>(f)
-	_FileSetStore[f.fullPath] = WeakRef(a as AnyObject)
-	return a
 }

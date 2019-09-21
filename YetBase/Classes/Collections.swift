@@ -9,12 +9,13 @@ infix operator =*: ComparisonPrecedence
 infix operator !=*: ComparisonPrecedence
 
 //IN
-public func =*<T, C>(e: T, c: C) -> Bool where T: Equatable, C: Sequence, C.Element == T {
+@inlinable
+public func =*<T: Equatable, C: Sequence>(e: T, c: C) -> Bool where C.Element == T {
 	return c.contains(e)
 }
 
 //NOT IN
-public func !=*<T, C>(e: T, c: C) -> Bool where T: Equatable, C: Sequence, C.Element == T {
+public func !=*<T: Equatable, C: Sequence>(e: T, c: C) -> Bool where C.Element == T {
 	return !c.contains(e)
 }
 

@@ -87,55 +87,6 @@ public class Task {
 	}
 }
 
-public class Sync {
-	private weak var obj: AnyObject? = nil
-	private var state: Int = 0
-
-	public init(_ obj: AnyObject) {
-		self.obj = obj
-		state = 0
-	}
-
-	@discardableResult
-	public func enter() -> Sync {
-		if let ob = self.obj {
-			objc_sync_enter(ob)
-			state = 1
-		}
-		return self
-	}
-
-	public func exit() {
-		if let ob = self.obj {
-			objc_sync_exit(ob)
-			state = 2
-		}
-		
-	}
-
-	deinit {
-		if self.state == 1 {
-			self.exit()
-		}
-	}
-}
-
-public func sync(_ obj: Any, _ block: () -> Void) {
-	objc_sync_enter(obj)
-	defer {
-		objc_sync_exit(obj)
-	}
-	block()
-}
-
-public func syncRet<T>(_ obj: Any, _ block: () -> T) -> T {
-	objc_sync_enter(obj)
-	defer {
-		objc_sync_exit(obj)
-	}
-	return block()
-}
-
 public class TaskQueue {
 	public let queue: DispatchQueue
 
@@ -164,4 +115,61 @@ public class TaskQueue {
 	public func back(_ block: @escaping BlockVoid) {
 		self.queue.async(execute: block)
 	}
+}
+
+public class Sync {
+	private weak var obj: AnyObject? = nil
+	private var state: Int = 0
+
+	public init(_ obj: AnyObject) {
+		self.obj = obj
+		state = 0
+	}
+
+	@discardableResult
+	public func enter() -> Sync {
+		if let ob = self.obj {
+			objc_sync_enter(ob)
+			state = 1
+		}
+		return self
+	}
+
+	public func exit() {
+		if let ob = self.obj {
+			objc_sync_exit(ob)
+			state = 2
+		}
+
+	}
+
+	deinit {
+		if self.state == 1 {
+			self.exit()
+		}
+	}
+}
+
+public func sync(_ obj: Any, _ block: () -> Void) {
+	objc_sync_enter(obj)
+	defer {
+		objc_sync_exit(obj)
+	}
+	block()
+}
+
+public func syncRet<T>(_ obj: Any, _ block: () -> T) -> T {
+	objc_sync_enter(obj)
+	defer {
+		objc_sync_exit(obj)
+	}
+	return block()
+}
+
+public func syncR<T>(_ obj: Any, _ block: () -> T) -> T {
+	objc_sync_enter(obj)
+	defer {
+		objc_sync_exit(obj)
+	}
+	return block()
 }

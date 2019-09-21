@@ -12,3 +12,7 @@ public typealias ConstBytePointer = UnsafePointer<Byte>
 public typealias CharPointer = UnsafeMutablePointer<Int8>
 public typealias ConstCharPointer = UnsafePointer<Int8>
 public typealias BlockVoid = () -> Void
+public typealias BoolBlock = (Bool) -> Void
+public typealias StringBlock = (String) -> Void
+public typealias IntBlock = (Int) -> Void
+public typealias DoubleBlock = (Double) -> Void
