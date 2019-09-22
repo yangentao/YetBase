@@ -19,6 +19,13 @@ public func !=*<T: Equatable, C: Sequence>(e: T, c: C) -> Bool where C.Element =
 	return !c.contains(e)
 }
 
+extension ArraySlice {
+
+	var toArray: [Element] {
+		return Array<Element>(self)
+	}
+}
+
 public extension Sequence {
 	var toArray: Array<Element> {
 		return Array<Element>(self)
