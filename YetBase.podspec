@@ -7,7 +7,7 @@
 Pod::Spec.new do |s|
   prjName = 'YetBase'
   s.name             = prjName
-  s.version          = '1.0.8'
+  s.version          = '1.0.9'
   s.summary          = "#{prjName} is an iOS  library writen by swift."
   s.description      = "#{prjName} is an iOS library writen by swift. OK"
   s.homepage         = "https://github.com/yangentao/#{prjName}"
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.source           = { :git => "https://github.com/yangentao/#{prjName}.git", :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
-  s.swift_versions = ["5.0"]
+  s.swift_versions = ["5.0", "5.1"]
 
   s.source_files = "#{prjName}/Classes/**/*"
   

@@ -5,7 +5,7 @@
 
 import Foundation
 
-public class FileArrayModel<T: Codable & Hashable> {
+public class FileArrayModel<T: Codable > {
 	public var items: Array<T> = Array<T>()
 	public var file: File
 
@@ -16,7 +16,7 @@ public class FileArrayModel<T: Codable & Hashable> {
 }
 
 //use model.items for update
-public class FileArray<T: Codable & Hashable>: Sequence {
+public class FileArray<T: Codable >: Sequence {
 
 	public typealias Element = T
 	public typealias Iterator = Array<T>.Iterator
@@ -58,7 +58,7 @@ public class FileArray<T: Codable & Hashable>: Sequence {
 
 private var _FileArrayStore = [String: WeakRef<AnyObject>]()
 
-private func fileArrayOf<T: Codable & Hashable>(_ f: File) -> FileArrayModel<T> {
+private func fileArrayOf<T: Codable >(_ f: File) -> FileArrayModel<T> {
 	return syncR(_FileArrayStore) {
 		if let old = _FileArrayStore[f.fullPath]?.value {
 			return old as! FileArrayModel<T>
