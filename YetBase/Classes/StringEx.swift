@@ -7,12 +7,6 @@ import Foundation
 
 fileprivate let Chars09: Array<Character> = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
-public extension Character {
-	var isNumber: Bool {
-		return Chars09.contains(self)
-	}
-}
-
 public extension String.Encoding {
 
 	static func fromName(_ name: String) -> String.Encoding? {
@@ -26,7 +20,15 @@ public extension String.Encoding {
 }
 
 public extension String {
-
+	var formatedPhone: String {
+		var s = ""
+		for ch in self {
+			if (ch >= "0" && ch <= "9") || ch == "+" {
+				s.append(ch)
+			}
+		}
+		return s
+	}
 	var cstrUtf8: [CChar] {
 		return self.cString(using: .utf8) ?? []
 	}
@@ -77,16 +79,6 @@ public extension String {
 	func match(_ reg: String) -> Bool {
 		let p = NSPredicate(format: "SELF MATCHES %@", [reg])
 		return p.evaluate(with: self)
-	}
-
-	var formatedPhone: String {
-		var s = ""
-		for c: Character in self {
-			if c.isNumber {
-				s.append(c)
-			}
-		}
-		return s
 	}
 
 	var toInt: Int? {
@@ -270,6 +262,49 @@ public extension Substring {
 
 	func toString() -> String {
 		return String(self)
+	}
+}
+
+private let lowerCaseMap: Dictionary<Character, Character> = ["A": "a", "B": "b",
+                                                              "C": "c", "D": "d",
+                                                              "E": "e", "F": "f",
+                                                              "G": "g", "H": "h",
+                                                              "I": "i", "J": "j",
+                                                              "K": "k", "L": "l",
+                                                              "M": "m", "N": "n",
+                                                              "O": "o", "P": "p",
+                                                              "Q": "q", "R": "r",
+                                                              "S": "s", "T": "t",
+                                                              "U": "u", "V": "v",
+                                                              "W": "w", "X": "x",
+                                                              "Y": "y", "Z": "z"]
+
+private let upperCaseMap: Dictionary<Character, Character> = ["a": "A", "b": "B",
+                                                              "c": "C", "d": "D",
+                                                              "e": "E", "f": "F",
+                                                              "g": "G", "h": "H",
+                                                              "i": "I", "j": "J",
+                                                              "k": "K", "l": "L",
+                                                              "m": "M", "n": "N",
+                                                              "o": "O", "p": "P",
+                                                              "q": "Q", "r": "R",
+                                                              "s": "S", "t": "T",
+                                                              "u": "U", "v": "V",
+                                                              "w": "W", "x": "X",
+                                                              "y": "Y", "z": "Z"]
+
+public extension Character {
+	var isNumber: Bool {
+		return (self >= "0" && self <= "9")
+	}
+	var isAlpha: Bool {
+		return (self >= "a" && self <= "z") || (self >= "A" && self <= "Z")
+	}
+	var lowerCase: Character {
+		return lowerCaseMap[self] ?? self
+	}
+	var upperCase: Character {
+		return upperCaseMap[self] ?? self
 	}
 }
 

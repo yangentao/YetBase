@@ -52,3 +52,19 @@ public extension Bundle {
 		return File(p)
 	}
 }
+
+import Foundation
+
+public func resOf(cls: AnyClass, res: String) -> String {
+	if res.hasPrefix("/") {
+		return res
+	}
+	return Bundle(for: cls).bundlePath.appendPath(res)
+}
+
+public func resMain(_ res: String) -> String {
+	if res.hasPrefix("/") {
+		return res
+	}
+	return Bundle.main.bundlePath.appendPath(res)
+}

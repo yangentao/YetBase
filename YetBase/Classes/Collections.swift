@@ -19,7 +19,7 @@ public func !=*<T: Equatable, C: Sequence>(e: T, c: C) -> Bool where C.Element =
 	return !c.contains(e)
 }
 
-extension ArraySlice {
+public extension ArraySlice {
 
 	var toArray: [Element] {
 		return Array<Element>(self)
@@ -232,17 +232,17 @@ public extension Dictionary {
 }
 
 public class MySet<Element: Hashable> {
-	var set: Set<Element>
+	public var set: Set<Element>
 
-	init(_ capcity: Int = 16) {
+	public init(_ capcity: Int = 16) {
 		set = Set<Element>(minimumCapacity: capcity)
 	}
 
-	init<Source>(_ sequence: Source) where Element == Source.Element, Source: Sequence {
+	public init<Source>(_ sequence: Source) where Element == Source.Element, Source: Sequence {
 		set = Set<Element>(sequence)
 	}
 
-	init(arrayLiteral elements: Element...) {
+	public init(arrayLiteral elements: Element...) {
 		set = Set<Element>(minimumCapacity: elements.count + 8)
 		for e in elements {
 			set.insert(e)
@@ -251,13 +251,13 @@ public class MySet<Element: Hashable> {
 }
 
 public class MyMap<Key: Hashable, Value> {
-	var map: Dictionary<Key, Value>
+	public var map: Dictionary<Key, Value>
 
-	init(_ capcity: Int = 16) {
+	public init(_ capcity: Int = 16) {
 		map = Dictionary<Key, Value>(minimumCapacity: capcity)
 	}
 
-	init(dictionaryLiteral elements: (Key, Value)...) {
+	public init(dictionaryLiteral elements: (Key, Value)...) {
 		map = Dictionary<Key, Value>(minimumCapacity: elements.count + 8)
 		for (k, v) in elements {
 			map[k] = v
@@ -266,17 +266,17 @@ public class MyMap<Key: Hashable, Value> {
 }
 
 public class MyArray<Element> {
-	var array: Array<Element>
+	public var array: Array<Element>
 
-	init() {
+	public init() {
 		array = Array<Element>()
 	}
 
-	init<S>(_ s: S) where Element == S.Element, S: Sequence {
+	public init<S>(_ s: S) where Element == S.Element, S: Sequence {
 		array = Array<Element>(s)
 	}
 
-	init(repeating repeatedValue: Element, count: Int) {
+	public init(repeating repeatedValue: Element, count: Int) {
 		array = Array<Element>(repeating: repeatedValue, count: count)
 	}
 }
