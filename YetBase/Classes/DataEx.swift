@@ -15,6 +15,10 @@ public extension Data {
 		self.append(s.dataUtf8)
 	}
 
+	mutating func appendNewLine() {
+		self.append("\r\n".dataUtf8)
+	}
+
 	var stringUtf8: String? {
 		return String(data: self, encoding: .utf8)
 	}

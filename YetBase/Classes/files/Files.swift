@@ -14,15 +14,15 @@ public class Files {
 
 public extension Files {
 	static func cacheFile(_ cacheName: String) -> File {
-		return File(cacheDir.appendPath(cacheName))
+		File(cacheDir.appendPath(cacheName))
 	}
 
 	static func docFile(_ docName: String) -> File {
-		return File(docDir.appendPath(docName))
+		File(docDir.appendPath(docName))
 	}
 
 	static func tempFile(_ name: String) -> File {
-		return File(tempDir.appendPath(name))
+		File(tempDir.appendPath(name))
 	}
 }
 
@@ -47,17 +47,17 @@ public class File {
 public extension File {
 
 	static var mainBundle: File {
-		return File(Bundle.main.bundlePath)
+		File(Bundle.main.bundlePath)
 	}
 
 	var lastPath: String {
-		return fullPath.lastPath
+		fullPath.lastPath
 	}
 	var parentPath: String {
-		return fullPath.parentPath
+		fullPath.parentPath
 	}
 	var parentFile: File {
-		return File(self.parentPath)
+		File(self.parentPath)
 	}
 
 	var size: Int {
@@ -70,7 +70,7 @@ public extension File {
 	}
 
 	var exist: Bool {
-		return fm.fileExists(atPath: fullPath)
+		fm.fileExists(atPath: fullPath)
 	}
 
 	var isFile: Bool {
@@ -150,6 +150,7 @@ public extension File {
 			return []
 		}
 	}
+
 	func listDeep() -> [String] {
 		do {
 			return try fm.subpathsOfDirectory(atPath: self.fullPath)
@@ -172,9 +173,9 @@ public extension File {
 }
 
 public func FileURL(_ file: String) -> URL {
-	return URL(fileURLWithPath: file, isDirectory: false)
+	URL(fileURLWithPath: file, isDirectory: false)
 }
 
 public func DirURL(_ dir: String) -> URL {
-	return URL(fileURLWithPath: dir, isDirectory: true)
+	URL(fileURLWithPath: dir, isDirectory: true)
 }

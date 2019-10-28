@@ -30,7 +30,7 @@ public extension String {
 		return s
 	}
 	var cstrUtf8: [CChar] {
-		return self.cString(using: .utf8) ?? []
+		self.cString(using: .utf8) ?? []
 	}
 
 	func appendPath(_ s: String) -> String {
@@ -50,13 +50,19 @@ public extension String {
 		return String(ls.last!)
 	}
 
+	//  /home/wang/  -> /home -> /
 	var parentPath: String {
-
+		if self == "/" {
+			return ""
+		}
 		if self.last == "/" {
 			let s = self[self.startIndex..<self.index(before: self.endIndex)]
 			return String(s).parentPath
 		}
 		if let n = self.lastIndex(of: "/") {
+			if n == self.startIndex {
+				return "/"
+			}
 			return String(self[self.startIndex..<n])
 		} else {
 			return ""
@@ -65,15 +71,15 @@ public extension String {
 
 	//trim(",;"
 	func trim(_ cs: String) -> String {
-		return self.trimmingCharacters(in: CharacterSet(charactersIn: cs))
+		self.trimmingCharacters(in: CharacterSet(charactersIn: cs))
 	}
 
 	func endWith(_ s: String) -> Bool {
-		return self.hasSuffix(s)
+		self.hasSuffix(s)
 	}
 
 	func startWith(_ s: String) -> Bool {
-		return self.hasPrefix(s)
+		self.hasPrefix(s)
 	}
 
 	func match(_ reg: String) -> Bool {
@@ -82,36 +88,36 @@ public extension String {
 	}
 
 	var toInt: Int? {
-		return Int(self)
+		Int(self)
 	}
 	var toDouble: Double? {
-		return Double(self)
+		Double(self)
 	}
 	var toBool: Bool? {
-		return Bool(self)
+		Bool(self)
 	}
 
 	var trimed: String {
-		return self.trimmingCharacters(in: .whitespacesAndNewlines)
+		self.trimmingCharacters(in: .whitespacesAndNewlines)
 	}
 
 	var urlEncoded: String {
-		return self.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+		self.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
 	}
 
 	var notEmpty: Bool {
-		return !self.isEmpty
+		!self.isEmpty
 	}
 
 	var empty: Bool {
-		return self.isEmpty
+		self.isEmpty
 	}
 
 	var dataUtf8: Data {
-		return self.data(using: String.Encoding.utf8, allowLossyConversion: false)!
+		self.data(using: String.Encoding.utf8, allowLossyConversion: false)!
 	}
 	var dataUnicode: Data {
-		return self.data(using: String.Encoding.unicode, allowLossyConversion: false)!
+		self.data(using: String.Encoding.unicode, allowLossyConversion: false)!
 	}
 
 	func charAt(n: Int) -> Character? {
@@ -122,7 +128,7 @@ public extension String {
 	}
 
 	func at(_ n: Int) -> Character {
-		return self[self.idx(n)]
+		self[self.idx(n)]
 	}
 
 	func substr(_ from: Int) -> String {
@@ -145,7 +151,7 @@ public extension String {
 	}
 
 	func header(_ size: Int) -> String {
-		return substr(0, size)
+		substr(0, size)
 	}
 
 	func tail(_ size: Int) -> String {
@@ -215,45 +221,45 @@ public extension String {
 	}
 
 	var escapedSQL: String {
-		return self.replaced(["'": "''"])
+		self.replaced(["'": "''"])
 	}
 
 	var local: String {
 		get {
-			return NSLocalizedString(self, comment: self)
+			NSLocalizedString(self, comment: self)
 		}
 	}
 
 	subscript(value: PartialRangeUpTo<Int>) -> Substring {
 		get {
-			return self[..<self.idx(value.upperBound)]
+			self[..<self.idx(value.upperBound)]
 		}
 	}
 
 	subscript(value: PartialRangeThrough<Int>) -> Substring {
 		get {
-			return self[...self.idx(value.upperBound)]
+			self[...self.idx(value.upperBound)]
 		}
 	}
 
 	subscript(value: PartialRangeFrom<Int>) -> Substring {
 		get {
-			return self[self.idx(value.lowerBound)...]
+			self[self.idx(value.lowerBound)...]
 		}
 	}
 	subscript(value: ClosedRange<Int>) -> Substring {
 		get {
-			return self[self.idx(value.lowerBound)...self.idx(value.upperBound)]
+			self[self.idx(value.lowerBound)...self.idx(value.upperBound)]
 		}
 	}
 	subscript(value: Range<Int>) -> Substring {
 		get {
-			return self[self.idx(value.lowerBound)..<self.idx(value.upperBound)]
+			self[self.idx(value.lowerBound)..<self.idx(value.upperBound)]
 		}
 	}
 
 	func idx(_ n: Int) -> String.Index {
-		return self.index(self.startIndex, offsetBy: n)
+		self.index(self.startIndex, offsetBy: n)
 	}
 
 }
@@ -261,7 +267,7 @@ public extension String {
 public extension Substring {
 
 	func toString() -> String {
-		return String(self)
+		String(self)
 	}
 }
 
@@ -295,16 +301,16 @@ private let upperCaseMap: Dictionary<Character, Character> = ["a": "A", "b": "B"
 
 public extension Character {
 	var isNumber: Bool {
-		return (self >= "0" && self <= "9")
+		(self >= "0" && self <= "9")
 	}
 	var isAlpha: Bool {
-		return (self >= "a" && self <= "z") || (self >= "A" && self <= "Z")
+		(self >= "a" && self <= "z") || (self >= "A" && self <= "Z")
 	}
 	var lowerCase: Character {
-		return lowerCaseMap[self] ?? self
+		lowerCaseMap[self] ?? self
 	}
 	var upperCase: Character {
-		return upperCaseMap[self] ?? self
+		upperCaseMap[self] ?? self
 	}
 }
 

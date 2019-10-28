@@ -18,7 +18,7 @@ public class ScheduleItem {
 	}
 
 	public var canceled: Bool {
-		return self.block == nil
+		  self.block == nil
 	}
 
 	public func cancel() {
@@ -28,12 +28,14 @@ public class ScheduleItem {
 
 public class Task {
 	private static var tasks = [ScheduleItem]()
+}
 
-	public static func mergeFore(_ name: String, _ block: @escaping BlockVoid) {
+public extension Task {
+	static func mergeFore(_ name: String, _ block: @escaping BlockVoid) {
 		self.mergeFore(name, 0.3, block)
 	}
 
-	public static func mergeFore(_ name: String, _ second: Double, _ block: @escaping BlockVoid) {
+	static func mergeFore(_ name: String, _ second: Double, _ block: @escaping BlockVoid) {
 
 		let item = ScheduleItem(name: name, block: block)
 		self.tasks.append(item)
@@ -52,25 +54,25 @@ public class Task {
 		}
 	}
 
-	public static func fore(_ block: @escaping BlockVoid) {
+	static func fore(_ block: @escaping BlockVoid) {
 		DispatchQueue.main.async(execute: block)
 	}
 
-	public static func foreDelay(_ seconds: Double, _ block: @escaping BlockVoid) {
+	static func foreDelay(seconds: Double, _ block: @escaping BlockVoid) {
 		let a = DispatchTime.now() + seconds
 		DispatchQueue.main.asyncAfter(deadline: a, execute: block)
 	}
 
-	public static func back(_ block: @escaping BlockVoid) {
+	static func back(_ block: @escaping BlockVoid) {
 		DispatchQueue.global().async(execute: block)
 	}
 
-	public static func backDelay(_ seconds: Double, _ block: @escaping BlockVoid) {
+	static func backDelay(seconds: Double, _ block: @escaping BlockVoid) {
 		let a = DispatchTime.now() + seconds
 		DispatchQueue.global().asyncAfter(deadline: a, execute: block)
 	}
 
-	public static func foreSchedule(_ second: Double, _ block: @escaping BlockVoid) -> ScheduleItem {
+	static func foreSchedule(_ second: Double, _ block: @escaping BlockVoid) -> ScheduleItem {
 		let item = ScheduleItem(name: "", block: block)
 		DispatchQueue.main.asyncAfter(deadline: second.afterSeconds) {
 			item.block?()
@@ -79,7 +81,7 @@ public class Task {
 		return item
 	}
 
-	public static func runOnce(_ key: String, _ block: () -> Void) {
+	static func runOnce(_ key: String, _ block: () -> Void) {
 		if !onceSet.contains(key) {
 			onceSet.insert(key)
 			block()
@@ -98,7 +100,7 @@ public class TaskQueue {
 		DispatchQueue.main.async(execute: block)
 	}
 
-	public func foreDelay(_ seconds: Double, _ block: @escaping BlockVoid) {
+	public func foreDelay(seconds: Double, _ block: @escaping BlockVoid) {
 		let a = DispatchTime.now() + seconds
 		DispatchQueue.main.asyncAfter(deadline: a, execute: block)
 	}
@@ -107,7 +109,7 @@ public class TaskQueue {
 		self.queue.sync(execute: block)
 	}
 
-	public func backDelay(_ seconds: Double, _ block: @escaping BlockVoid) {
+	public func backDelay(seconds: Double, _ block: @escaping BlockVoid) {
 		let a = DispatchTime.now() + seconds
 		self.queue.asyncAfter(deadline: a, execute: block)
 	}

@@ -5,86 +5,67 @@
 
 import Foundation
 
-public class Msg {
-	public var msg: String = ""
-	public var result = Array<Any>()
-	public var argAny: Any?
-	public var argN1 = 0
-	public var argN2 = 0
-	public var argS1 = ""
-	public var argS2 = ""
-	public var argB1 = false
-	public var argB2 = false
+//example
+extension MsgID {
+	static let userChanged = MsgID("msg.userChanged")
+}
 
-	public init(_ msg: String) {
+public struct MsgID: Hashable, Equatable, RawRepresentable {
+	public typealias RawValue = String
+	public var rawValue: String
+
+	public init(_ rawValue: String) {
+		self.rawValue = rawValue
+	}
+
+	public init?(rawValue: String) {
+		self.rawValue = rawValue
+	}
+
+	public static func ==(lhs: MsgID, rhs: MsgID) -> Bool {
+		lhs.rawValue == rhs.rawValue
+	}
+
+	public static func ==(lhs: MsgID, rhs: String) -> Bool {
+		lhs.rawValue == rhs
+	}
+}
+
+public class Msg: Equatable {
+	public var msg: MsgID
+	public var result = Array<Any>()
+	public var any: Any? = nil
+	public var anyObject: AnyObject? = nil
+	public var n1 = 0
+	public var n2 = 0
+	public var s1 = ""
+	public var s2 = ""
+	public var b1 = false
+	public var b2 = false
+
+	public init(_ msg: MsgID) {
 		self.msg = msg
 	}
 }
 
 public extension Msg {
-	func n1(_ n: Int) -> Msg {
-		self.argN1 = n
-		return self
-	}
-
-	func n2(_ n: Int) -> Msg {
-		self.argN2 = n
-		return self
-	}
-
-	func s1(_ s: String) -> Msg {
-		self.argS1 = s
-		return self
-	}
-
-	func s2(_ s: String) -> Msg {
-		self.argS2 = s
-		return self
-	}
-
 	func fire() {
-		fireFore(self)
+		Task.fore {
+			MsgCenter.fireCurrent(self)
+		}
 	}
 
 	static func ==(lhs: Msg, rhs: String) -> Bool {
-		return lhs.msg == rhs
+		lhs.msg == rhs
+	}
+
+	static func ==(lhs: Msg, rhs: Msg) -> Bool {
+		lhs.msg == rhs.msg
 	}
 }
 
-public protocol MsgListener: AnyObject {
+public protocol MsgListener: class {
 	func onMsg(msg: Msg)
-}
-
-fileprivate class MsgItem: Equatable {
-	var key: String
-	weak var listener: MsgListener?
-
-	init(_ key: String, _ L: MsgListener) {
-		self.key = key
-		self.listener = L
-	}
-
-	var isNull: Bool {
-		return listener == nil
-	}
-
-	func isListener(_ L: MsgListener) -> Bool {
-		if let l = self.listener {
-			return l === L
-		}
-		return false
-	}
-
-	static func ==(lhs: MsgItem, rhs: MsgItem) -> Bool {
-		if lhs.key != rhs.key {
-			return false
-		}
-		if let a = lhs.listener, let b = rhs.listener, a === b {
-			return true
-		}
-		return false
-	}
-
 }
 
 fileprivate class ListenerAllItem: Equatable {
@@ -98,20 +79,18 @@ fileprivate class ListenerAllItem: Equatable {
 		if lhs === rhs {
 			return true
 		}
-		if let a = lhs.listener, let b = rhs.listener, a === b {
-			return true
+		if let a = lhs.listener, let b = rhs.listener {
+			return a === b
 		}
 		return false
 	}
 }
 
 public class MsgCenterObject {
-	private var all = [MsgItem]()
 	private var allItems = [ListenerAllItem]()
 
 	public func remove(_ listener: MsgListener) {
 		sync(self) {
-			all.removeAll(where: { $0.listener === listener })
 			allItems.removeAll(where: { $0.listener === listener })
 		}
 	}
@@ -125,22 +104,6 @@ public class MsgCenterObject {
 		}
 	}
 
-	public func listen(_ listener: MsgListener, _ msg: String, _ msgs: String...) {
-		listen(msg, listener)
-		for m in msgs {
-			listen(m, listener)
-		}
-	}
-
-	private func listen(_ msg: String, _ listener: MsgListener) {
-		let item = MsgItem(msg, listener)
-		sync(self) {
-			if !all.contains(item) {
-				all.append(item)
-			}
-		}
-	}
-
 	public func fireCurrent(_ msg: Msg) {
 		_ = allItems.drop {
 			$0.listener == nil
@@ -149,44 +112,22 @@ public class MsgCenterObject {
 		aItems.forEach { item in
 			item.listener?.onMsg(msg: msg)
 		}
-
-		var arr = Array<MsgItem>()
-		sync(self) {
-			_ = self.all.drop { a in
-				return a.isNull
-			}
-			let someItems = self.all.filter { a in
-				return a.key == msg.msg
-			}
-			arr.append(contentsOf: someItems)
-
-		}
-		for item in arr {
-			item.listener?.onMsg(msg: msg)
-		}
 	}
 
-	public func fire(_ msg: Msg) {
-		Task.fore {
-			MsgCenter.fireCurrent(msg)
-		}
-	}
 }
 
 public let MsgCenter = MsgCenterObject()
 
-public func fireFore(_ msg: String) {
-	fireFore(Msg(msg))
-}
+public extension MsgID {
+	func fire() {
+		let m = Msg(self)
+		m.fire()
+	}
 
-public func fireFore(_ msg: String, _ block: (Msg) -> Void) {
-	let m = Msg(msg)
-	block(m)
-	fireFore(m)
-}
-
-public func fireFore(_ msg: Msg) {
-	Task.fore {
-		MsgCenter.fireCurrent(msg)
+	func fire(_ block: (Msg) -> Void) {
+		let m = Msg(self)
+		block(m)
+		m.fire()
 	}
 }
+
