@@ -7,7 +7,7 @@
 Pod::Spec.new do |s|
   prjName = 'YetBase'
   s.name             = prjName
-  s.version          = '1.1.1'
+  s.version          = '1.1.2'
   s.summary          = "#{prjName} is an iOS  library writen by swift."
   s.description      = "#{prjName} is an iOS library writen by swift. OK"
   s.homepage         = "https://github.com/yangentao/#{prjName}"

@@ -5,6 +5,17 @@
 
 import Foundation
 
+
+public protocol ToString: CustomStringConvertible {
+	var toString: String { get }
+}
+
+public extension ToString {
+	var description: String {
+		self.toString
+	}
+}
+
 fileprivate let Chars09: Array<Character> = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 public extension String.Encoding {
