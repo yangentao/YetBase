@@ -18,7 +18,7 @@ public class ScheduleItem {
 	}
 
 	public var canceled: Bool {
-		  self.block == nil
+		self.block == nil
 	}
 
 	public func cancel() {
@@ -175,3 +175,14 @@ public func syncR<T>(_ obj: Any, _ block: () -> T) -> T {
 	}
 	return block()
 }
+
+//if #available(iOS 13.0, *) {
+//	extension DispatchQueue {
+//
+//		func scheduleAfter(_ seconds: Double, interval: Double, block: @escaping () -> Void) -> Cancellable {
+//
+//			let b = DispatchQueue.SchedulerTimeType.Stride(floatLiteral: interval)
+//			return DispatchQueue.main.schedule(after: DispatchQueue.SchedulerTimeType(seconds.afterNow), interval: b, block)
+//		}
+//	}
+//}

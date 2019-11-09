@@ -45,7 +45,7 @@ public struct HttpMethod: Hashable, Equatable, RawRepresentable {
 }
 
 public struct HttpHeader: Hashable, Equatable, RawRepresentable {
-	public private(set) var rawValue: String
+	public var rawValue: String
 
 	public init(_ value: String) {
 		self.rawValue = value

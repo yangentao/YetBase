@@ -8,7 +8,7 @@ import Foundation
 public extension Data {
 
 	var bytes: [UInt8] {
-		return [UInt8](self)
+		[UInt8](self)
 	}
 
 	mutating func appendUtf8(_ s: String) {
@@ -20,12 +20,12 @@ public extension Data {
 	}
 
 	var stringUtf8: String? {
-		return String(data: self, encoding: .utf8)
+		String(data: self, encoding: .utf8)
 	}
 
 	var base64: String {
 		get {
-			return self.base64EncodedString(options: Base64EncodingOptions.endLineWithCarriageReturn)
+			self.base64EncodedString(options: Base64EncodingOptions.endLineWithCarriageReturn)
 		}
 
 	}

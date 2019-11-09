@@ -18,20 +18,6 @@ public extension HttpReq {
 		}
 	}
 
-	@discardableResult
-	func authBasic(user: String, pwd: String) -> Self {
-		let s = user + ":" + pwd
-		let ss = s.dataUtf8.base64
-		self[.Authorization] = "Basic " + ss
-		return self
-	}
-
-	@discardableResult
-	func arg(key: String, value: String) -> Self {
-		self.queryItems += URLQueryItem(name: key, value: value)
-		return self
-	}
-
 	func setHeader(key: String, value: String?) {
 		self._request.setValue(value, forHTTPHeaderField: key)
 	}
@@ -72,6 +58,14 @@ public extension HttpReq {
 			self.setHeader(named: named, value: newValue)
 		}
 	}
+	var contentType: String? {
+		get {
+			self.getHeader(named: .ContentType)
+		}
+		set {
+			self.setHeader(named: .ContentType, value: newValue)
+		}
+	}
 }
 
 open class HttpReq {
@@ -83,6 +77,8 @@ open class HttpReq {
 	public var progressSend: HttpProgress? = nil
 	fileprivate var sendStart = false
 	fileprivate var recvStart = false
+
+	var task: URLSessionTask? = nil
 
 	public init(url: URL) {
 		self.urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)!
@@ -96,22 +92,57 @@ open class HttpReq {
 
 	}
 
+	public func cancelTask() {
+		self.task?.cancel()
+	}
+
+	open func dump() {
+		if !isDebug {
+			return
+		}
+		println()
+		let req = self._request
+		println(req.httpMethod, " ", req.url)
+		if let m = req.allHTTPHeaderFields {
+			for (k, v) in m {
+				println(k, ":", v)
+			}
+		}
+		if let ct = self.contentType {
+			if ct.contains("xml") || ct.contains("json") || ct.contains("html") || ct.contains("text") {
+				if let data = req.httpBody {
+					if data.count < 1024 {
+						if let s = String(data: data, encoding: .utf8) {
+							println("Body: ")
+							println(s)
+						}
+					}
+				}
+			}
+		}
+		println()
+	}
+
 	open func requestSync() -> HttpResp {
 		self.beforeRequest()
 		let req = self._request
+		self.dump()
+
 		var hr: HttpResp!
 		let sem = DispatchSemaphore(value: 0);
 		let task: URLSessionTask = URLSession.shared.dataTask(with: req, completionHandler: { (nsdata: Data?, urlResp: URLResponse?, err: Error?) -> Void in
 			hr = HttpResp(response: urlResp as? HTTPURLResponse, data: nsdata, error: err)
 			sem.signal()
 		})
+		self.task = task
 		task.resume()
 		self.watchRecv(task: task)
 		self.watchSend(task: task)
 		sem.wait()
 		if isDebug {
-			hr.dumpHeader()
+			hr.dump()
 		}
+
 		return hr
 	}
 
@@ -122,6 +153,7 @@ open class HttpReq {
 			let result = HttpResp(response: urlResp as? HTTPURLResponse, data: nsdata, error: err)
 			callback(result)
 		})
+		self.task = task
 		task.resume()
 		self.watchRecv(task: task)
 		self.watchSend(task: task)
@@ -194,6 +226,24 @@ private extension HttpReq {
 			p.onHttpFinish(OK)
 		}
 	}
+}
+
+public extension HttpReq {
+
+	@discardableResult
+	func authBasic(user: String, pwd: String) -> Self {
+		let s = user + ":" + pwd
+		let ss = s.dataUtf8.base64
+		self[.Authorization] = "Basic " + ss
+		return self
+	}
+
+	@discardableResult
+	func arg(key: String, value: String) -> Self {
+		self.queryItems += URLQueryItem(name: key, value: value)
+		return self
+	}
+
 }
 
 public class HttpGet: HttpReq {

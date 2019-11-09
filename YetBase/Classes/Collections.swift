@@ -28,15 +28,15 @@ public extension ArraySlice {
 
 public extension Sequence {
 	var toArray: Array<Element> {
-		return Array<Element>(self)
+		Array<Element>(self)
 	}
 
 	func sortedAsc<T>(_ block: (Element) -> T) -> [Element] where T: Comparable {
-		return self.sorted(by: { block($0) < block($1) })
+		self.sorted(by: { block($0) < block($1) })
 	}
 
 	func sortedDesc<T>(_ block: (Element) -> T) -> [Element] where T: Comparable {
-		return self.sorted(by: { block($1) < block($0) })
+		self.sorted(by: { block($1) < block($0) })
 	}
 
 	func sumBy<T>(_ block: (Element) -> T) -> T where T: Numeric {
@@ -50,7 +50,7 @@ public extension Sequence {
 
 public extension Sequence where Element: Hashable {
 	var toSet: Set<Element> {
-		return Set<Element>(self)
+		Set<Element>(self)
 	}
 }
 
@@ -67,7 +67,7 @@ public extension Sequence where Element: Numeric {
 
 public extension Collection {
 	var notEmpty: Bool {
-		return !self.isEmpty
+		!self.isEmpty
 	}
 }
 
@@ -228,6 +228,25 @@ public extension Dictionary {
 			m[a] = b
 		}
 		return m
+	}
+}
+
+public extension Array where Element: Equatable {
+	static func -=(lhs: inout Array, rhs: Element?) {
+		if let r = rhs {
+			lhs.removeAllIf { e in
+				e == r
+			}
+		}
+	}
+
+	@discardableResult
+	mutating func addOnAbsence(_ ele: Element) -> Bool {
+		if self.contains(ele) {
+			return false
+		}
+		self.append(ele)
+		return true
 	}
 }
 

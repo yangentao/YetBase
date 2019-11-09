@@ -29,37 +29,29 @@ public extension LogLevel {
 }
 
 public struct LogItem: Hashable, Equatable, ToString {
-	var level: LogLevel
-	var message: String
-	var time: TimeInterval = Date().timeIntervalSince1970
+	public var level: LogLevel
+	public var tag: String = ""
+	public var message: String
+	public var time: TimeInterval = Date().timeIntervalSince1970
 
 	public var toString: String {
-		Date(timeIntervalSince1970: time).format(fmt: .yyyy_MM_dd__HH_mm_ss_SSS) + " " + level.rawValue + " " + message
+		Date(timeIntervalSince1970: time).format(fmt: .yyyy_MM_dd__HH_mm_ss_SSS) + " " + level.rawValue + ": " + tag + " " + message
 	}
 }
 
-public protocol LogPrinter {
-	func logWrite(item: LogItem)
-	func logFlush()
-}
+public struct LogListenerHolder: Equatable {
 
-public protocol LogListener: class {
-	func onLog(item: LogItem)
-}
+	public weak var listener: LogListener?
 
-fileprivate struct LogListenerHolder: Equatable {
-	var levels: [LogLevel]
-	weak var listener: LogListener?
-
-	static func ==(lhs: LogListenerHolder, rhs: LogListenerHolder) -> Bool {
-		lhs.levels == rhs.levels && lhs.listener === rhs.listener
+	public static func ==(lhs: LogListenerHolder, rhs: LogListenerHolder) -> Bool {
+		lhs.listener === rhs.listener
 	}
 }
 
 public class LogImpl {
 	private let lock: NSRecursiveLock = NSRecursiveLock()
-	public var printer: LogPrinter = LogConsolePrinter()
 	private var listeners: [LogListenerHolder] = []
+	public var printer: LogPrinter = LogConsolePrinter()
 
 	public private(set ) var historyItems: [LogItem] = []
 	public var keepSize: Int = 1000 {
@@ -73,16 +65,6 @@ public class LogImpl {
 		}
 	}
 
-	public var levelFilter: (LogLevel) -> Bool = { _ in
-		true
-	}
-
-	public func filterItems(levels: [LogLevel]) -> [LogItem] {
-		self.filterItems {
-			levels.contains($0.level)
-		}
-	}
-
 	public func filterItems(_ block: (LogItem) -> Bool) -> [LogItem] {
 		self.lock.lock()
 		defer {
@@ -92,14 +74,8 @@ public class LogImpl {
 	}
 
 	public func addListener(listener: LogListener) {
-		self.addListener(levels: [], listener: listener)
-	}
-
-	public func addListener(levels: [LogLevel], listener: LogListener) {
-		let a = LogListenerHolder(levels: levels, listener: listener)
-		if !self.listeners.contains(a) {
-			self.listeners.append(a)
-		}
+		let a = LogListenerHolder(listener: listener)
+		self.listeners.addOnAbsence(a)
 	}
 
 	public func flush() {
@@ -115,8 +91,7 @@ public class LogImpl {
 			}
 			self.historyItems.append(item)
 		}
-
-		if levelFilter(item.level) {
+		if printer.acceptLog(item: item) {
 			if item.level == .debug {
 				#if DEBUG
 					printer.logWrite(item: item)
@@ -127,11 +102,17 @@ public class LogImpl {
 		}
 		lock.unlock()
 		Task.fore {
+			var needClean = false
 			for l in self.listeners {
-				if l.levels.isEmpty {
-					l.listener?.onLog(item: item)
-				} else if l.levels.contains(item.level) {
-					l.listener?.onLog(item: item)
+				if let L = l.listener {
+					L.onLog(item: item)
+				} else {
+					needClean = true
+				}
+			}
+			if needClean {
+				self.listeners.removeAll {
+					$0.listener == nil
 				}
 			}
 		}
@@ -182,6 +163,37 @@ public extension LogImpl {
 	}
 }
 
+public extension LogImpl {
+
+	func log(level: LogLevel, tag: String, items: [Any?]) {
+		self.log(item: LogItem(level: level, tag: tag, message: itemsToString(items)))
+	}
+
+	func info(tag: String, _ items: Any?...) {
+		self.log(level: .info, tag: tag, items: items)
+	}
+
+	func debug(tag: String, _ items: Any?...) {
+		self.log(level: .debug, tag: tag, items: items)
+	}
+
+	func warn(tag: String, _ items: Any?...) {
+		self.log(level: .warning, tag: tag, items: items)
+	}
+
+	func error(tag: String, _ items: Any?...) {
+		self.log(level: .error, tag: tag, items: items)
+	}
+
+	func success(tag: String, _ items: Any?...) {
+		self.log(level: .success, tag: tag, items: items)
+	}
+
+	func verbose(tag: String, _ items: Any?...) {
+		self.log(level: .verbose, tag: tag, items: items)
+	}
+}
+
 public func log(_ ss: Any?...) {
 	Log.info(ss)
 }
@@ -194,15 +206,27 @@ public func loge(_ ss: Any?...) {
 	Log.error(ss)
 }
 
-public func println(_ items: Any?...) {
-	for a in items {
-		if let b = a {
-			print(b, terminator: " ")
-		} else {
-			print("nil", terminator: " ")
-		}
-	}
-	print("")
+public func log(tag: String, _ ss: Any?...) {
+	Log.info(tag: tag, ss)
+}
+
+public func logd(tag: String, _ ss: Any?...) {
+	Log.debug(tag: tag, ss)
+}
+
+public func loge(tag: String, _ ss: Any?...) {
+	Log.error(tag: tag, ss)
+}
+
+public protocol LogPrinter {
+	func acceptLog(item: LogItem) -> Bool
+	func logWrite(item: LogItem)
+	func logFlush()
+}
+
+public protocol LogListener: class {
+	func acceptLog(item: LogItem) -> Bool
+	func onLog(item: LogItem)
 }
 
 public class LogConsolePrinter: LogPrinter {
@@ -213,18 +237,24 @@ public class LogConsolePrinter: LogPrinter {
 	public func logFlush() {
 
 	}
+
+	public func acceptLog(item: LogItem) -> Bool {
+		true
+	}
 }
 
 public class LogTreePrinter: LogPrinter {
-	var printers: [LogPrinter] = []
+	public var printers: [LogPrinter] = []
 
-	init(printers: [LogPrinter]) {
+	public init(printers: [LogPrinter]) {
 		self.printers = printers
 	}
 
 	public func logWrite(item: LogItem) {
 		for p in printers {
-			p.logWrite(item: item)
+			if p.acceptLog(item: item) {
+				p.logWrite(item: item)
+			}
 		}
 	}
 
@@ -232,5 +262,9 @@ public class LogTreePrinter: LogPrinter {
 		for p in printers {
 			p.logFlush()
 		}
+	}
+
+	public func acceptLog(item: LogItem) -> Bool {
+		true
 	}
 }

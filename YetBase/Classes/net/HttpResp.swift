@@ -5,15 +5,25 @@
 
 import Foundation
 
+extension HTTPURLResponse {
+	var contentType: String? {
+		self.allHeaderFields[HttpHeader.ContentType.rawValue] as? String
+	}
+}
+
 public class HttpResp {
 	public let response: HTTPURLResponse?
 	public let content: Data?
 	public let error: Error?
+	public let contentType: String?
 
 	init(response: HTTPURLResponse?, data: Data?, error: Error?) {
 		self.response = response
 		self.content = data
 		self.error = error
+		//self.contentType = response?.value(forHTTPHeaderField: HttpHeader.ContentType.rawValue)?.lowercased()
+		self.contentType = response?.contentType
+
 	}
 }
 
@@ -29,7 +39,6 @@ public extension HttpResp {
 	var OK: Bool {
 		statusCode >= 200 && statusCode < 300
 	}
-
 	var message: String? {
 		if self.error != nil {
 			return self.error?.localizedDescription
@@ -77,7 +86,11 @@ public extension HttpResp {
 }
 
 public extension HttpResp {
-	func dumpHeader() {
+	func dump() {
+		if !isDebug {
+			return
+		}
+		println()
 		let code = self.statusCode
 		if code > 0 {
 			println("Http Status: ", code, HTTPURLResponse.localizedString(forStatusCode: code))
@@ -89,6 +102,20 @@ public extension HttpResp {
 				println(k, ":", v)
 			}
 		}
+		if let ct = self.contentType {
+			if ct.contains("xml") || ct.contains("json") || ct.contains("html") || ct.contains("text") {
+				if let s = self.text {
+					println("Body:")
+					println(s)
+				}
+			}
+		} else {
+			if let s = self.text {
+				println("Body:")
+				println(s)
+			}
+		}
 		println("")
 	}
+
 }

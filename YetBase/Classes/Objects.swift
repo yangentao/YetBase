@@ -5,6 +5,18 @@
 
 import Foundation
 
+public protocol IObject: class {
+
+}
+
+extension IObject {
+	@discardableResult
+	func with(_ block: (Self) -> Void) -> Self {
+		block(self)
+		return self
+	}
+}
+
 private var attr_key = "_attrkey_"
 
 private class MapWrap {
@@ -42,5 +54,40 @@ public extension NSObject {
 		set {
 			setAttr("_tagS_", newValue)
 		}
+	}
+}
+
+
+extension NSObject {
+	func watch(name: Notification.Name, object: Any?, selector: Selector) {
+		self.watch(name: name, object: object, selector: selector, target: self)
+	}
+
+	func watch(name: Notification.Name, object: Any?, selector: Selector, target: Any) {
+		NotificationCenter.default.addObserver(target, selector: selector, name: name, object: object)
+	}
+
+	func watchRemove(name: Notification.Name, object: Any?) {
+		self.watchRemove(name: name, object: object, target: self)
+	}
+
+	func watchRemove(name: Notification.Name, object: Any?, target: Any) {
+		NotificationCenter.default.removeObserver(target, name: name, object: object)
+	}
+
+	func notify(name: Notification.Name) {
+		self.notify(name: name, object: self)
+	}
+
+	func notify(name: Notification.Name, object: Any?) {
+		NotificationCenter.default.post(name: name, object: object)
+	}
+
+	func notify(name: Notification.Name, userInfo: [AnyHashable: Any]) {
+		self.notify(name: name, object: self, userInfo: userInfo)
+	}
+
+	func notify(name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]) {
+		NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)
 	}
 }

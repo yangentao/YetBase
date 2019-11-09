@@ -5,43 +5,130 @@
 
 import Foundation
 
+let KB = 1024
+let MB = 1024 * 1024
+let GB = 1024 * 1024 * 1024
+
+public typealias Byte = UInt8
+public typealias Long = Int64
+public typealias ULong = UInt64
+
+extension Double {
+
+	func format(_ block: (NumberFormatter) -> Void) -> String {
+		let f = NumberFormatter()
+		f.numberStyle = .decimal
+		block(f)
+		return f.string(from: NSNumber(value: self)) ?? ""
+	}
+}
+
+extension BinaryInteger {
+	var toString: String {
+		"\(self)"
+	}
+
+	var cint: Int32 {
+		Int32(self)
+	}
+	var int32Value: Int32 {
+		Int32(self)
+	}
+	var uint32Value: UInt32 {
+		UInt32(self)
+	}
+	var intValue: Int {
+		Int(self)
+	}
+	var uintValue: UInt {
+		UInt(self)
+	}
+	var longValue: Long {
+		Long(self)
+	}
+	var ulongValue: ULong {
+		ULong(self)
+	}
+	var floatValue: Float {
+		Float(self)
+	}
+	var doubleValue: Double {
+		Double(self)
+	}
+	var cgfloatValue: CGFloat {
+		CGFloat(self)
+	}
+}
+
+extension BinaryFloatingPoint {
+	var toString: String {
+		"\(self)"
+	}
+	
+	var cint: Int32 {
+		Int32(self)
+	}
+	var int32Value: Int32 {
+		Int32(self)
+	}
+	var uint32Value: UInt32 {
+		UInt32(self)
+	}
+	var intValue: Int {
+		Int(self)
+	}
+	var uintValue: UInt {
+		UInt(self)
+	}
+	var longValue: Long {
+		Long(self)
+	}
+	var ulongValue: ULong {
+		ULong(self)
+	}
+	var floatValue: Float {
+		Float(self)
+	}
+	var doubleValue: Double {
+		Double(self)
+	}
+	var cgfloatValue: CGFloat {
+		CGFloat(self)
+	}
+}
+
 public extension NSNumber {
 	var isInteger: Bool {
-		return !self.stringValue.contains(".")
+		!self.stringValue.contains(".")
 	}
 }
 
 public extension Int8 {
 	var num: NSNumber {
-		return NSNumber(value: self)
+		NSNumber(value: self)
 	}
 	var s: String {
-		return "\(self)"
+		"\(self)"
 	}
 }
 
 public extension Int16 {
 	var num: NSNumber {
-		return NSNumber(value: self)
+		NSNumber(value: self)
 	}
 	var s: String {
-		return "\(self)"
+		"\(self)"
 	}
 }
 
 public extension Int32 {
 	var num: NSNumber {
-		return NSNumber(value: self)
+		NSNumber(value: self)
 	}
 	var s: String {
-		return "\(self)"
+		"\(self)"
 	}
-	var intValue: Int {
-		return Int(self)
-	}
-	var uintValue: UInt {
-		return UInt(self)
-	}
+
 }
 
 public extension Int {
@@ -51,83 +138,69 @@ public extension Int {
 	var s: String {
 		return "\(self)"
 	}
-	var cint: Int32 {
-		return Int32(self)
-	}
-	var int32Value: Int32 {
-		return Int32(self)
-	}
-	var uint32Value: UInt32 {
-		return UInt32(self)
-	}
+
 }
 
 public extension Int64 {
 	var num: NSNumber {
-		return NSNumber(value: self)
+		NSNumber(value: self)
 	}
-	var intValue: Int {
-		return Int(self)
-	}
+
 	var date: Date {
-		return Date(timeIntervalSince1970: Double(self / 1000))
+		Date(timeIntervalSince1970: Double(self / 1000))
 	}
 }
 
 public extension UInt8 {
 	var num: NSNumber {
-		return NSNumber(value: self)
+		NSNumber(value: self)
 	}
 	var s: String {
-		return "\(self)"
+		"\(self)"
 	}
 }
 
 public extension UInt16 {
 	var num: NSNumber {
-		return NSNumber(value: self)
+		NSNumber(value: self)
 	}
 	var s: String {
-		return "\(self)"
+		"\(self)"
 	}
 }
 
 public extension UInt32 {
 	var num: NSNumber {
-		return NSNumber(value: self)
+		NSNumber(value: self)
 	}
 	var s: String {
-		return "\(self)"
+		"\(self)"
 	}
 }
 
 public extension UInt {
 	var num: NSNumber {
-		return NSNumber(value: self)
+		NSNumber(value: self)
 	}
 	var s: String {
-		return "\(self)"
+		"\(self)"
 	}
-	var intValue: Int {
-		return Int(self)
-	}
+
 }
 
 public extension UInt64 {
 	var num: NSNumber {
 		return NSNumber(value: self)
 	}
-	var intValue: Int {
-		return Int(self)
-	}
+
 }
 
 public extension Float {
 	var num: NSNumber {
-		return NSNumber(value: self)
+		NSNumber(value: self)
 	}
 	var s: String {
-		return "\(self)"
+		"\(self)"
 	}
 }
 
@@ -136,15 +209,15 @@ public extension Double {
 		return NSNumber(value: self)
 	}
 	var s: String {
-		return "\(self)"
+		"\(self)"
 	}
 
 	func keepDot(_ n: Int) -> String {
-		return String(format: "%.\(n)f", arguments: [self])
+		String(format: "%.\(n)f", arguments: [self])
 	}
 
 	var afterSeconds: DispatchTime {
-		return DispatchTime.now() + self
+		DispatchTime.now() + self
 	}
 }
 

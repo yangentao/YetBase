@@ -4,13 +4,14 @@
 //
 
 import Foundation
+import UIKit
 
 public var isDebug: Bool {
 	get {
 		#if DEBUG
-		return true
+			return true
 		#else
-		return false
+			return false
 		#endif
 	}
 }
