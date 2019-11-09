@@ -4,7 +4,7 @@
 //
 
 import Foundation
-import Combine
+//import Combine
 
 public extension Double {
 	var afterNow: DispatchTime {
@@ -189,10 +189,10 @@ public func syncR<T>(_ obj: Any, _ block: () -> T) -> T {
 	return block()
 }
 
-extension DispatchQueue {
-	@available(iOS 13.0, *)
-	func scheduleAfter(_ seconds: Double, interval: Double, block: @escaping () -> Void) -> Cancellable {
-		let b = DispatchQueue.SchedulerTimeType.Stride(floatLiteral: interval)
-		return DispatchQueue.main.schedule(after: DispatchQueue.SchedulerTimeType(seconds.afterNow), interval: b, block)
-	}
-}
+//extension DispatchQueue {
+//	@available(iOS 13.0, *)
+//	func scheduleAfter(_ seconds: Double, interval: Double, block: @escaping () -> Void) -> Cancellable {
+//		let b = DispatchQueue.SchedulerTimeType.Stride(floatLiteral: interval)
+//		return DispatchQueue.main.schedule(after: DispatchQueue.SchedulerTimeType(seconds.afterNow), interval: b, block)
+//	}
+//}
