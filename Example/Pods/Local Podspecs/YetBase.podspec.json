@@ -1,6 +1,6 @@
 {
   "name": "YetBase",
-  "version": "1.1.6",
+  "version": "1.2.0",
   "summary": "YetBase is an iOS  library writen by swift.",
   "description": "YetBase is an iOS library writen by swift. OK",
   "homepage": "https://github.com/yangentao/YetBase",
@@ -13,10 +13,10 @@
   },
   "source": {
     "git": "https://github.com/yangentao/YetBase.git",
-    "tag": "1.1.6"
+    "tag": "1.2.0"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "11.0"
   },
   "swift_versions": [
     "5.0",
